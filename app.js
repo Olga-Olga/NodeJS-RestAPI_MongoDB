@@ -10,7 +10,7 @@ import "dotenv/config";
 
 import contactsRouter from "./routes/api/contacts-routers.js";
 const app = express();
-dotenv.config();
+
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 // middleware для вівода в консоль логов
 app.use(logger(formatsLogger));
