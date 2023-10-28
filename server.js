@@ -1,21 +1,18 @@
+import mongoose from "mongoose";
 import app from "./app.js";
-// import mongoose from "module";
+import { DB_HOST } from "./config.js";
 const { PORT = 3000 } = process.env;
-// app.listen(PORT, () => {
-//   console.log("Server running. Use our API on port:", PORT);
-// });
-
-const DB_HOST =
-  "mongodb+srv://olga_olga:<password>@cluster0.plzu3r6.mongodb.net/contacts?retryWrites=true&w=majority";
 
 mongoose
-  .connect(DB_HOST)
+  .connect(process.env.DB_HOST)
+  .then(console.log("connected to db"))
   .then(() => {
-    app1.listen(PORT, () => {
+    app.listen(PORT, () => {
       console.log("Server running. Use our API on port: 3000");
     });
   })
   .catch((err) => {
     console.log(err.message);
+    // закриваємо запущені процесси з невідомою помилкою 1, можно 1 не писати
     process.exit(1);
   });

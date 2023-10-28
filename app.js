@@ -1,15 +1,20 @@
 import express from "express";
 import logger from "morgan";
 import cors from "cors";
+// import dotenv from "dotenv";
+// dotenv.config();
+// ===> переписуємо
+import "dotenv/config";
+
 // import contactsRouter from "./routes/api/contacts-routers";
 
 import contactsRouter from "./routes/api/contacts-routers.js";
 const app = express();
-
+dotenv.config();
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 // middleware для вівода в консоль логов
 app.use(logger(formatsLogger));
-//
+
 app.use(cors());
 
 app.use(express.json()); //для того чтобы реквест боди можно было считать, переведя в джейсон из формата Буффер
