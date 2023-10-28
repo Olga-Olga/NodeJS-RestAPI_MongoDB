@@ -2,8 +2,9 @@ import Contact from "../models/Contact.js";
 import { HttpError } from "../helpers/index.js";
 import { ctrlWrapper } from "../decorators/index.js";
 
-const getAll = async (req, res, next) => {
+const getAll = async (req, res) => {
   const result = await Contact.find();
+  console.log(result);
   res.json(result);
 };
 
@@ -16,10 +17,10 @@ const getAll = async (req, res, next) => {
 //   res.json(contactList);
 // };
 
-// const addContact = async (req, res) => {
-//   const newContact = await contactsOperations.addContact(req.body);
-//   res.status(201).json(newContact);
-// };
+const addContact = async (req, res) => {
+  const newContact = await Contact.create(req.body);
+  res.status(201).json(newContact);
+};
 
 // const updateContactById = async (req, res) => {
 //   const { contactId } = req.params;
@@ -45,7 +46,7 @@ const getAll = async (req, res, next) => {
 export default {
   getAll: ctrlWrapper(getAll),
   // getById: ctrlWrapper(getById),
-  // addContact: ctrlWrapper(addContact),
+  addContact: ctrlWrapper(addContact),
   // removeContactById: ctrlWrapper(removeContactById),
   // updateContactById: ctrlWrapper(updateContactById),
 };

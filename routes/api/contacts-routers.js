@@ -12,6 +12,7 @@ import {
 router.get("/", contactsController.getAll);
 // router.get("/:contactId", contactsController.getById);
 // router.post("/", validateBody(movieAddSchema), contactsController.addContact);
+router.post("/", contactsController.addContact);
 
 // router.delete("/:contactId", contactsController.removeContactById);
 

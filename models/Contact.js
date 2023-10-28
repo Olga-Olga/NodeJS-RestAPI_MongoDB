@@ -1,12 +1,11 @@
-import { Int32 } from "mongodb";
 import { Schema, model } from "mongoose";
 
-const movieSchema = new Schema({
+const contactSchema = new Schema({
   name: String,
   email: String,
   phone: String,
 });
 
-const Contact = model("contact", movieSchema);
+const Contact = model("contact", contactSchema);
 
 export default Contact;

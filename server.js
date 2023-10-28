@@ -1,18 +1,21 @@
-import mongoose from "mongoose";
 import app from "./app.js";
-// import { DB_HOST } from "./config.js";
-const { PORT = 3000 } = process.env;
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+console.log(process.env.DB_HOST);
 
 mongoose
   .connect(process.env.DB_HOST)
-  .then(console.log("connected to db"))
   .then(() => {
-    app.listen(PORT, () => {
-      console.log("Server running. Use our API on port: 3000");
+    app.listen(3000, () => {
+      console.log(
+        "Database connection successful. Server running on port: 3000"
+      );
     });
   })
-  .catch((err) => {
-    console.log(err.message);
-    // закриваємо запущені процесси з невідомою помилкою 1, можно 1 не писати
+  .catch((erro) => {
+    console.log(erro.message);
     process.exit(1);
   });
