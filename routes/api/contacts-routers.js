@@ -1,4 +1,3 @@
-// ! Маршрути для одного об'єкту
 import express from "express";
 const router = express.Router();
 
@@ -13,10 +12,11 @@ import {
 import { isValidId } from "../../middleware/index.js";
 
 router.get("/", contactsController.getAll);
-router.get("/:contactId", contactsController.getById);
+router.get("/:contactId", isValidId, contactsController.getById);
 router.post("/", validateBody(contactAddSchema), contactsController.addContact);
 router.put(
   "/:contactId",
+  isValidId,
   validateBody(contactUpdateSchema),
   contactsController.updateContactById
 );

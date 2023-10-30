@@ -10,7 +10,6 @@ const getAll = async (req, res) => {
 
 const getById = async (req, res) => {
   const { contactId } = req.params;
-  // const contactList = await Contact.findOne({ _id: contactId });
   const contactList = await Contact.findById(contactId);
   if (!contactList) {
     throw HttpError(404, `Can't find such Contact ${contactId}`);
@@ -25,9 +24,7 @@ const addContact = async (req, res) => {
 
 const updateContactById = async (req, res) => {
   const { contactId } = req.params;
-  const updateResult = Contact.findByIdAndUpdate(contactId, req.body, {
-    new: true,
-  });
+  const updateResult = await Contact.findByIdAndUpdate(contactId, req.body);
   if (!updateResult) {
     throw HttpError(400, `Contacts with ${contactId} not found(.`);
   }
@@ -36,10 +33,6 @@ const updateContactById = async (req, res) => {
 
 const updateFavorite = async (req, res) => {
   const { contactId } = req.params;
-  const { favorite } = req.body;
-  if (!favorite) {
-    return res.status(400, "missing field favorite");
-  }
   const result = await Contact.findByIdAndUpdate(contactId, req.body);
   if (!result) {
     throw HttpError(404, `Contact with id=${contactId} not found`);
@@ -62,5 +55,5 @@ export default {
   addContact: ctrlWrapper(addContact),
   removeContactById: ctrlWrapper(removeContactById),
   updateContactById: ctrlWrapper(updateContactById),
-  updateFavorite: ctrlWrapper(updateContactById),
+  updateFavorite: ctrlWrapper(updateFavorite),
 };
