@@ -1,21 +1,21 @@
 import app from "./app.js";
-// import mongoose from "module";
-const { PORT = 3000 } = process.env;
-app.listen(PORT, () => {
-  console.log("Server running. Use our API on port:", PORT);
-});
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 
-// const DB_HOST =
-//   "mongodb+srv://olga_olga:<password>@cluster0.plzu3r6.mongodb.net/contacts?retryWrites=true&w=majority";
+dotenv.config();
 
-// mongoose
-//   .connect(DB_HOST)
-//   .then(() => {
-//     app1.listen(PORT, () => {
-//       console.log("Server running. Use our API on port: 3000");
-//     });
-//   })
-//   .catch((err) => {
-//     console.log(err.message);
-//     process.exit(1);
-//   });
+console.log(process.env.DB_HOST);
+
+mongoose
+  .connect(process.env.DB_HOST)
+  .then(() => {
+    app.listen(3000, () => {
+      console.log(
+        "Database connection successful. Server running on port: 3000"
+      );
+    });
+  })
+  .catch((erro) => {
+    console.log(erro.message);
+    process.exit(1);
+  });
