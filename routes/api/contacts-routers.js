@@ -9,7 +9,9 @@ import {
   contactPatchSchema,
 } from "../../models/Contact.js";
 
-import { isValidId } from "../../middleware/index.js";
+import { isValidId, authenticate } from "../../middleware/index.js";
+
+router.use(authenticate);
 
 router.get("/", contactsController.getAll);
 router.get("/:contactId", isValidId, contactsController.getById);

@@ -38,8 +38,8 @@ const signin = async (req, res) => {
   }
 
   const payload = { id: userFormDB._id }; //{ id: userFormDB._id };
-  console.log("payload", payload);
-  console.log("JWT_SECRET", JWT_SECRET);
+  // console.log("payload", payload);
+  // console.log("JWT_SECRET", JWT_SECRET);
 
   // const token = "135@#$\nw45ywse5yrZE"; // token прикріплюється до запитів на приватні роути
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "24h" }); // token прикріплюється до запитів на приватні роути
