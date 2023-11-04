@@ -44,6 +44,11 @@ const contactsSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    owner: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "user", //значить що реверенс на коллекцію Юзер
+    },
   },
   { versionKey: false, timestamps: true }
 );
