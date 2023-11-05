@@ -43,16 +43,27 @@ const signin = async (req, res) => {
 
   // const token = "135@#$\nw45ywse5yrZE"; // token прикріплюється до запитів на приватні роути
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "24h" }); // token прикріплюється до запитів на приватні роути
-
+  await User.findByIdAndUpdate(userFormDB._id, { token }); //зберігаємо токін в базі
   res.json({ token });
 };
 
-const postOne = async (req, res) => {
-  const newUser = await User.create(req.body);
-  res.status(201).json(newUser);
+// тут надо видалити токін з обекту користувача з бази
+const signout = async (req, res) => {
+  const { _id } = req.user;
+  await User.findByIdAndUpdate(_id, { token: "" });
+  res.json({
+    message: "Signout has been successfull",
+  });
+};
+
+const getCurrent = async (req, res) => {
+  const { username, email } = req.user; //дістаємо з реквест Юзера імейл і нейм без запиту до бази і відсилаємо на фронтенд
+  res.json({ username, email });
 };
 
 export default {
   signup: ctrlWrapper(signup),
   signin: ctrlWrapper(signin),
+  signout: ctrlWrapper(signout),
+  getCurrent: ctrlWrapper(getCurrent),
 };
