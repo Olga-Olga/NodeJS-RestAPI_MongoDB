@@ -50,6 +50,9 @@ const contactsSchema = new Schema(
       ref: "user", //значить що реверенс на коллекцію Юзер
     },
     poster: { type: String },
+    avatarURL: {
+      type: String,
+    },
   },
   { versionKey: false, timestamps: true }
 );

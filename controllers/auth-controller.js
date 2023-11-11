@@ -1,4 +1,3 @@
-import Contact from "../models/Contact.js";
 import User from "../models/User.js";
 import { HttpError } from "../helpers/index.js";
 import { ctrlWrapper } from "../decorators/index.js";
@@ -6,8 +5,12 @@ import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 const { JWT_SECRET } = process.env;
-console.log(JWT_SECRET);
+// console.log(JWT_SECRET);
+import gravatar from "gravatar";
+import Jimp from "jimp";
 // const JWT_SECRET = "cjyPvS7w7sCBSIWHn0ljiOgYQK84Xm2";
+import path from "path";
+const avatarPath = path.resolve("public", "avatars");
 
 const signup = async (req, res) => {
   const { email, password } = req.body;
@@ -18,7 +21,14 @@ const signup = async (req, res) => {
 
   const hashPassword = await bcryptjs.hash(password, 10);
 
-  const newUser = await User.create({ ...req.body, password: hashPassword });
+  const newEmail = email.trim().toLowerCase();
+  const avatarURL = `${gravatar.url(newEmail, { s: "80", r: "pg", d: "mp" })}`;
+
+  const newUser = await User.create({
+    ...req.body,
+    password: hashPassword,
+    avatarURL,
+  });
   res.status(201).json({ username: newUser.username, email: newUser.email });
   // res.json(newUser);
 };
@@ -61,9 +71,27 @@ const getCurrent = async (req, res) => {
   res.json({ username, email });
 };
 
+const updateAvatar = async (req, res) => {
+  const { _id } = req.user;
+  const { path: oldPath, filename } = req.file;
+  const newPath = path.join(avatarPath, filename);
+  await fs.rename(oldPath, newPath);
+
+  await Jimp.read(newPath)
+    .then((avatar) => avatar.resize(250, 250).writeAsync(newPath))
+    .catch((err) => {
+      throw HttpError(404, err.message);
+    });
+
+  const avatarURL = path.join("avatars", filename);
+  await User.findByIdAndUpdate(_id, { avatarURL });
+  res.status(200).json({ avatarURL: avatarURL });
+};
+
 export default {
   signup: ctrlWrapper(signup),
   signin: ctrlWrapper(signin),
   signout: ctrlWrapper(signout),
   getCurrent: ctrlWrapper(getCurrent),
+  updateAvatar: ctrlWrapper(updateAvatar),
 };
