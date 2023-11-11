@@ -49,6 +49,7 @@ const contactsSchema = new Schema(
       required: true,
       ref: "user", //значить що реверенс на коллекцію Юзер
     },
+    poster: { type: String },
   },
   { versionKey: false, timestamps: true }
 );
