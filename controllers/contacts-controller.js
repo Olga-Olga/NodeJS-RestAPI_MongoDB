@@ -36,7 +36,7 @@ const addContact = async (req, res) => {
 
   const newPath = path.join(posterPath, filename);
   await fs.rename(oldPath, newPath);
-  const poster = path.join("public", "posters", filename);
+  const poster = path.join("posters", filename);
   const newContact = await Contact.create({ ...req.body, poster, owner });
   res.status(201).json(newContact);
 };

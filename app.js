@@ -11,7 +11,7 @@ app.use(logger(formatsLogger));
 app.use(cors());
 
 app.use(express.json());
-
+app.use(express.static("public")); //якшо прийде запит за статичним файлом, то шукай його в папці Паблік
 app.use("/api/contacts", contactsRouter);
 app.use("/api/auth", authRouter);
 app.use((req, res) => {
