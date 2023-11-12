@@ -1,10 +1,9 @@
 import Contact from "../models/Contact.js";
 import { HttpError } from "../helpers/index.js";
 import { ctrlWrapper } from "../decorators/index.js";
-import { FSx } from "aws-sdk";
 import path from "path";
 
-const posterPath = path.resolve("public", posters);
+const avaterPath = path.resolve("public", "avatars");
 const getAll = async (req, res) => {
   const { _id: owner } = req.user;
   const { page = 1, limit = 10 } = req.query;
@@ -20,7 +19,7 @@ const getAll = async (req, res) => {
 const getById = async (req, res) => {
   const { contactId } = req.params;
   const { _id: owner } = req.user;
-  // const contactList = await Contact.findById(contactId);
+  //  const contactList = await Contact.findById(contactId);
   const contactList = await Contact.findOne({ _id: id, owner });
   if (!contactList) {
     throw HttpError(404, `Can't find such Contact ${contactId}`);
@@ -34,10 +33,10 @@ const addContact = async (req, res) => {
   console.log("rq.file", req.file);
   const { path: oldPath, filename } = req.file; //зберігаемо деструктуровану змінну Пас під ім'ям Олдпас
 
-  const newPath = path.join(posterPath, filename);
+  const newPath = path.join(avaterPath, filename);
   await fs.rename(oldPath, newPath);
-  const poster = path.join("posters", filename);
-  const newContact = await Contact.create({ ...req.body, poster, owner });
+  const avatar = path.join("avaters", filename);
+  const newContact = await Contact.create({ ...req.body, avatar, owner });
   res.status(201).json(newContact);
 };
 

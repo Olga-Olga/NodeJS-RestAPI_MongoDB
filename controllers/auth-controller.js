@@ -22,12 +22,12 @@ const signup = async (req, res) => {
   const hashPassword = await bcryptjs.hash(password, 10);
 
   const newEmail = email.trim().toLowerCase();
-  const avatarURL = `${gravatar.url(newEmail, { s: "80", r: "pg", d: "mp" })}`;
+  const avatar = `${gravatar.url(newEmail, { s: "80", r: "pg", d: "mp" })}`;
 
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
-    avatarURL,
+    avatar,
   });
   res.status(201).json({ username: newUser.username, email: newUser.email });
   // res.json(newUser);
@@ -83,9 +83,9 @@ const updateAvatar = async (req, res) => {
       throw HttpError(404, err.message);
     });
 
-  const avatarURL = path.join("avatars", filename);
-  await User.findByIdAndUpdate(_id, { avatarURL });
-  res.status(200).json({ avatarURL: avatarURL });
+  const avatar = path.join("avatars", filename);
+  await User.findByIdAndUpdate(_id, { avatar });
+  res.status(200).json({ avatar: avatar });
 };
 
 export default {

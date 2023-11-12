@@ -20,7 +20,7 @@ router.get("/:contactId", isValidId, contactsController.getById);
 // upload.fields([{name: "poster", maxCount: 1}]) - декілька файлів прийшли Постер один і Макс Каунт другий
 router.post(
   "/",
-  upload.single("poster"), //явно вказуємо в міділварі в якому полі буде файл - в полі Постер один файл
+  upload.single("avatar"), //явно вказуємо в міділварі в якому полі буде файл - в полі Постер один файл
   validateBody(contactAddSchema),
   contactsController.addContact
 );
