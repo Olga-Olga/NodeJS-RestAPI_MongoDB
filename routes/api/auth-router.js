@@ -2,9 +2,8 @@ import express from "express";
 import authController from "../../controllers/auth-controller.js";
 
 import { validateBody } from "../../decorators/index.js";
-
 import { userSignUpSchema, userSignInSchema } from "../../models/User.js";
-import { authenticate } from "../../middleware/index.js"; //мідлвара, що перевірає чи є токін
+import { authenticate, upload } from "../../middleware/index.js"; //мідлвара, що перевірає чи є токін
 const authRouter = express.Router();
 
 authRouter.post(
@@ -21,5 +20,12 @@ authRouter.post(
 
 authRouter.post("/signout", authenticate, authController.signout);
 authRouter.get("/current", authenticate, authController.getCurrent);
+
+authRouter.patch(
+  "/avatars",
+  upload.single("avatar"),
+  authenticate,
+  authController.updateAvatar
+);
 
 export default authRouter;

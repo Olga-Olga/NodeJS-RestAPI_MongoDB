@@ -1,7 +1,10 @@
 import Contact from "../models/Contact.js";
 import { HttpError } from "../helpers/index.js";
 import { ctrlWrapper } from "../decorators/index.js";
+import { FSx } from "aws-sdk";
+import path from "path";
 
+const posterPath = path.resolve("public", posters);
 const getAll = async (req, res) => {
   const { _id: owner } = req.user;
   const { page = 1, limit = 10 } = req.query;
@@ -26,9 +29,15 @@ const getById = async (req, res) => {
 };
 
 const addContact = async (req, res) => {
-  console.log(req.user);
   const { _id: owner } = req.user;
-  const newContact = await Contact.create({ ...req.body, owner });
+  console.log("rq.body", req.body);
+  console.log("rq.file", req.file);
+  const { path: oldPath, filename } = req.file; //зберігаемо деструктуровану змінну Пас під ім'ям Олдпас
+
+  const newPath = path.join(posterPath, filename);
+  await fs.rename(oldPath, newPath);
+  const poster = path.join("posters", filename);
+  const newContact = await Contact.create({ ...req.body, poster, owner });
   res.status(201).json(newContact);
 };
 
