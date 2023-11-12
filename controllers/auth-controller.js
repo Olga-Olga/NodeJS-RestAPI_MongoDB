@@ -5,6 +5,7 @@ import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 const { JWT_SECRET } = process.env;
+import fs from "fs/promises";
 // console.log(JWT_SECRET);
 import gravatar from "gravatar";
 import Jimp from "jimp";
@@ -40,9 +41,7 @@ const signin = async (req, res) => {
   if (!userFormDB) {
     throw HttpError(401, "Email or password invalid");
   }
-
   const comparePassword = await bcryptjs.compare(password, userFormDB.password);
-
   if (!comparePassword) {
     throw HttpError(401, "Email or password invalid");
   }
@@ -75,17 +74,16 @@ const updateAvatar = async (req, res) => {
   const { _id } = req.user;
   const { path: oldPath, filename } = req.file;
   const newPath = path.join(avatarPath, filename);
-  await fs.rename(oldPath, newPath);
-
-  await Jimp.read(newPath)
-    .then((avatar) => avatar.resize(250, 250).writeAsync(newPath))
-    .catch((err) => {
-      throw HttpError(404, err.message);
-    });
-
+  Jimp.read(oldPath, function (err, avatar) {
+    if (err) throw err.massage;
+    avatar.resize(250, 250).quality(60).write(newPath);
+  });
+  await fs.unlink(oldPath);
   const avatar = path.join("avatars", filename);
-  await User.findByIdAndUpdate(_id, { avatar });
-  res.status(200).json({ avatar: avatar });
+  const user = await User.findByIdAndUpdate(_id, { avatar });
+  res.status(200).json({
+    avatar: user.avatar,
+  });
 };
 
 export default {

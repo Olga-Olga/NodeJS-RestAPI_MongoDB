@@ -17,14 +17,10 @@ const userSchema = new Schema(
       unique: true,
       match: emailRegexp,
     },
-    // subscription: {
-    //   type: String,
-    //   enum: ["starter", "pro", "business"],
-    //   default: "starter",
-    // },
     token: {
       type: String,
     },
+    avatar: { type: String },
   },
   { versionKey: false, timestamps: true }
 );
@@ -37,6 +33,7 @@ export const userSignUpSchema = Joi.object({
   username: Joi.string().required(),
   email: Joi.string().email().pattern(emailRegexp).required(),
   password: Joi.string().min(6).required(),
+  avatar: Joi.string(),
 });
 
 export const userSignInSchema = Joi.object({
