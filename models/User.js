@@ -21,6 +21,13 @@ const userSchema = new Schema(
       type: String,
     },
     avatar: { type: String },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+    },
   },
   { versionKey: false, timestamps: true }
 );
@@ -45,6 +52,10 @@ export const contactPatchSchema = Joi.object({
   favorite: Joi.boolean().required().messages({
     "any.required": `missing field favorite`,
   }),
+});
+
+export const userVerifySchema = Joi.object({
+  email: Joi.string().min(3).required().pattern(emailRegexp),
 });
 
 const User = model("user", userSchema);
