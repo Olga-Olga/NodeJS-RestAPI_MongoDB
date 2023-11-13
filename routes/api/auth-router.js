@@ -2,7 +2,11 @@ import express from "express";
 import authController from "../../controllers/auth-controller.js";
 
 import { validateBody } from "../../decorators/index.js";
-import { userSignUpSchema, userSignInSchema } from "../../models/User.js";
+import {
+  userSignUpSchema,
+  userSignInSchema,
+  userVerifySchema,
+} from "../../models/User.js";
 import { authenticate, upload } from "../../middleware/index.js"; //мідлвара, що перевірає чи є токін
 const authRouter = express.Router();
 
@@ -26,6 +30,16 @@ authRouter.patch(
   upload.single("avatar"),
   authenticate,
   authController.updateAvatar
+);
+
+authRouter.get(
+  "/verify/:verificationToken",
+  authController.verificationRequest
+);
+authRouter.post(
+  "/verify",
+  validateBody(userVerifySchema),
+  authController.reverify
 );
 
 export default authRouter;

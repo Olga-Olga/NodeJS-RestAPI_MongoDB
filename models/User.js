@@ -17,12 +17,15 @@ const userSchema = new Schema(
       unique: true,
       match: emailRegexp,
     },
-    // subscription: {
-    //   type: String,
-    //   enum: ["starter", "pro", "business"],
-    //   default: "starter",
-    // },
     token: {
+      type: String,
+    },
+    avatar: { type: String },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
       type: String,
     },
   },
@@ -37,6 +40,7 @@ export const userSignUpSchema = Joi.object({
   username: Joi.string().required(),
   email: Joi.string().email().pattern(emailRegexp).required(),
   password: Joi.string().min(6).required(),
+  avatar: Joi.string(),
 });
 
 export const userSignInSchema = Joi.object({
@@ -48,6 +52,10 @@ export const contactPatchSchema = Joi.object({
   favorite: Joi.boolean().required().messages({
     "any.required": `missing field favorite`,
   }),
+});
+
+export const userVerifySchema = Joi.object({
+  email: Joi.string().min(3).required().pattern(emailRegexp),
 });
 
 const User = model("user", userSchema);
