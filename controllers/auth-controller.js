@@ -35,7 +35,7 @@ const signup = async (req, res) => {
   const massage = {
     userEmail: email,
     title: "Email verification.",
-    bodyContent: `<a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">Click here to verify email</a>`,
+    bodyContent: `<a target="_blank" href="${BASE_URL}/auth/verify/${verificationToken}">Click here to verify email</a>`,
   };
   sendEmail(massage);
   res
@@ -98,11 +98,14 @@ const updateAvatar = async (req, res) => {
 
 const verificationRequest = async (req, res) => {
   const { verificationToken } = req.params;
-  const user = await Users.findOne({ verificationToken });
+  const user = await User.findOne({ verificationToken });
   if (!user) {
     throw HttpError(404, "Not found!");
   }
-  await Users.findOneAndUpdate({ verificationToken: null, verify: true });
+  await User.findOneAndUpdate(
+    { verificationToken },
+    { verificationToken: null, verify: true }
+  );
   res.status(200).json({
     message: "Verification successful",
   });
@@ -110,7 +113,7 @@ const verificationRequest = async (req, res) => {
 
 const reverify = async (req, res) => {
   const { email } = req.body;
-  const user = await Users.findOne({ email });
+  const user = await User.findOne({ email });
   if (!user) {
     throw HttpError(404, "User with this email not found");
   }
@@ -118,14 +121,11 @@ const reverify = async (req, res) => {
     throw HttpError(400, "Verification has already been passed");
   }
   const verificationToken = nanoid();
-  const newUser = await Users.findOneAndUpdate(
-    { email },
-    { verificationToken }
-  );
+  const newUser = await User.findOneAndUpdate({ email }, { verificationToken });
   const massage = {
     userEmail: email,
     title: "Email ReVerification!",
-    bodyContent: `<a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">Click here to verify email</a>`,
+    bodyContent: `<a target="_blank" href="${BASE_URL}/auth/verify/${verificationToken}">Click here to verify email</a>`,
   };
 
   sendEmail(massage);
